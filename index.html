@@ -144,7 +144,7 @@ const App = new Vue({
             if (this.isPlaying) {
                 song.spin = true;
             } else {
-                song.spkn = false;
+                song.spin = false;
             }
             song.file.addEventListener("ended", () => { this.isPlaying = false; song.spin = false; });
         }
