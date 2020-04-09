@@ -17,7 +17,7 @@
                 <div class="container">
                     <img class="photo" :src="song.image" :alt="song.title" />
                     <div class="button">
-                        <img class src="./images/play-pause.png" alt="play/pause" @click="$event.target.classList.toggle('spin')" @click.prevent="isPlaying? pause(song, index) : play(song, index)" /><span v-text="song.title"></span>
+                        <img class src="./images/play-pause.png" alt="play/pause" v-bind:class="[song.spin ? 'spin' : '']" @click="toggleSpin(song)" @click.prevent="isPlaying? pause(song) : play(song)" /><span v-text="song.title"></span>
                         <audio :src="song.src">
                     </div>
                     <div id="bar">
@@ -37,7 +37,6 @@
 const App = new Vue({
     el: '#app',
     data: () => ({
-        spin: false,
         isPlaying: false,
         activeSong: 0,
         songs: [{
@@ -108,6 +107,7 @@ const App = new Vue({
             }
         ]
     }),
+
     mounted() {
         this.load();
     },
@@ -118,18 +118,15 @@ const App = new Vue({
                 this.activeSong = index;
             }
             this.audio = this.songs[this.activeSong].file;
-
             this.audio.addEventListener('pause', () => { this.isPlaying = false; });
             this.audio.addEventListener('play', () => { this.isPlaying = true; });
-            this.audio.addEventListener("ended", () => {
-                this.isPlaying = false;
-                this.spin = false;
-            });
+            this.audio.addEventListener("ended", () => { this.isPlaying = false; });
         },
 
         play(song) {
             song.file.play();
             this.isPlaying = true;
+            song.spin = true;
             song.file.addEventListener("timeupdate", () => {
                 song.progress = (song.file.currentTime / parseInt(song.file.duration) * 100 || 0) + "%";
                 let buffered = song.file.buffered;
@@ -140,6 +137,15 @@ const App = new Vue({
         pause(song) {
             song.file.pause();
             this.isPlaying = false;
+            song.spin = false;
+        },
+
+        toggleSpin(song) {
+            if (this.isPlaying) {
+                song.spin = true;
+            } else {
+                song.spkn = false;
+            }
         }
     }
 
