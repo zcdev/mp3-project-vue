@@ -20,8 +20,10 @@
                         <img class src="./images/play-pause.png" alt="play/pause" @click="$event.target.classList.toggle('spin')" @click.prevent="isPlaying? pause(song, index) : play(song, index)" /><span v-text="song.title"></span>
                         <audio :src="song.src">
                     </div>
+                    <div id="bar">
                     <div id="buffer-bar" :key="song.id" :style="{ width: song.buffer }">
                         <div id="progress-bar" :key="song.id" :style="{ width: song.progress }"></div>
+                    </div>
                     </div>
                 </div>
             </div>

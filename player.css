@@ -84,15 +84,23 @@ p {
 #progress-bar {
   background-color: #fff;
   position: absolute;
-  bottom: 0px;
+  bottom: 0;
   left: 0;
 }
 
 #buffer-bar {
   background-color: #afa2a6;
   position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
+#bar {
+  background-color: #000;
+  position: absolute;
   bottom: 25px;
   left: 0;
+  width: 100%;
 }
 
 
