@@ -120,7 +120,6 @@ const App = new Vue({
             this.audio = this.songs[this.activeSong].file;
             this.audio.addEventListener('pause', () => { this.isPlaying = false; });
             this.audio.addEventListener('play', () => { this.isPlaying = true; });
-            this.audio.addEventListener("ended", () => { this.isPlaying = false; });
         },
 
         play(song) {
@@ -146,6 +145,7 @@ const App = new Vue({
             } else {
                 song.spkn = false;
             }
+            song.file.addEventListener("ended", () => { this.isPlaying = false; song.spin = false; });
         }
     }
 
