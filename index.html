@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Zoe's Music</title>
+    <meta name="robots" content="noindex, nofollow">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <link href="player.css" rel="stylesheet">
+</head>
+
+<body>
+    <div id="app">
+        <div class="player">
+            <div class="card" v-for="(song,index) in songs" :key="song.id">
+                <div class="container">
+                    <img class="photo" :src="song.image" :alt="song.title" />
+                    <div class="button">
+                        <img class src="./images/play-pause.png" alt="play/pause" @click="$event.target.classList.toggle('spin')" @click.prevent="isPlaying? pause(song, index) : play(song, index)" /><span v-text="song.title"></span>
+                        <audio :src="song.src">
+                    </div>
+                    <div id="buffer-bar" :key="song.id" :style="{ width: song.buffer }">
+                        <div id="progress-bar" :key="song.id" :style="{ width: song.progress }"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+const App = new Vue({
+    el: '#app',
+    data: () => ({
+        audio: undefined,
+        isLoaded: false,
+        spin: false,
+        isPlaying: false,
+        selected: undefined,
+        duration: 0,
+        currentTime: 0,
+        audio: "",
+        activeSong: 0,
+        songs: [{
+                id: '0',
+                title: 'Fly',
+                file: new Audio('songs/fly.mp3'),
+                src: 'songs/fly.mp3',
+                image: 'images/bird.jpg',
+                isPlaying: false,
+                spin: false,
+                progress: "0%",
+                buffer: "0%"
+            },
+            {
+                id: '1',
+                title: 'Closer',
+                file: new Audio('songs/closer.mp3'),
+                src: 'songs/closer.mp3',
+                image: 'images/world.jpg',
+                isPlaying: false,
+                spin: false,
+                progress: "0%",
+                buffer: "0%"
+            },
+            {
+                id: '2',
+                title: 'It Will Never End',
+                file: new Audio('songs/it-will-never-end.mp3'),
+                src: 'songs/it-will-never-end.mp3',
+                image: 'images/forever.jpg',
+                isPlaying: false,
+                spin: false,
+                progress: "0%",
+                buffer: "0%"
+            },
+            {
+                id: '3',
+                title: 'Alone',
+                file: new Audio('songs/alone.mp3'),
+                src: 'songs/alone.mp3',
+                image: 'images/rain.jpg',
+                isPlaying: false,
+                spin: false,
+                progress: "0%",
+                buffer: "0%"
+            },
+            {
+                id: '4',
+                title: 'There Will Always Be An Open Door',
+                file: new Audio('songs/open-door.mp3'),
+                src: 'songs/open-door.mp3',
+                image: 'images/door.jpg',
+                isPlaying: false,
+                spin: false,
+                progress: "0%",
+                buffer: "0%"
+            },
+            {
+                id: '5',
+                title: 'Hello, Hello, Hello',
+                file: new Audio('songs/hello.mp3'),
+                src: 'songs/hello.mp3',
+                image: 'images/hello.jpg',
+                isPlaying: false,
+                spin: false,
+                progress: "0%",
+                buffer: "0%"
+            }
+        ],
+        audioFile: ""
+    }),
+    mounted() {
+        this.load();
+    },
+
+    methods: {
+        load(song, index) {
+            if (index !== undefined) {
+                this.activeSong = index;
+            }
+            this.audio = this.songs[this.activeSong].file;
+
+            this.audio.addEventListener('pause', () => { this.isPlaying = false; });
+            this.audio.addEventListener('play', () => { this.isPlaying = true; });
+            this.audio.addEventListener("ended", () => {
+                this.isPlaying = false;
+                this.spin = false;
+            });
+        },
+
+        play(song) {
+            song.file.play();
+            this.isPlaying = true;
+            song.file.addEventListener("timeupdate", () => {
+                song.progress = (song.file.currentTime / parseInt(song.file.duration) * 100 || 0) + "%";
+                let buffered = song.file.buffered;
+                song.buffer = Math.round(100 * buffered.end(0) / song.file.duration) + "%";
+            });
+        },
+
+        pause(song) {
+            song.file.pause();
+            this.isPlaying = false;
+        }
+    }
+
+});
+</script>
+
+</html>
